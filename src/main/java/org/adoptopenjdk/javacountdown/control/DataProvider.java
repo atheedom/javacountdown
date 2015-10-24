@@ -97,9 +97,8 @@ public class DataProvider {
         visit.setBrowserInfo(new BrowserInfo(visitTransfer.getBrowserName(), visitTransfer.getBrowserVersion()));
         visit.setOs(visitTransfer.getOs());
 
-        Key<Visit> key = null;
         try {
-            key = visitDAO.save(visit);
+            Key<Visit> key = visitDAO.save(visit);
             logger.debug("Visit persisted with key {}", key);
         } catch (Exception e) {
             logger.error("Could not persist Visit {}, message: {}", visit, e.getMessage());
