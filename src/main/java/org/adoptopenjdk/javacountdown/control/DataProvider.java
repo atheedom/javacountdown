@@ -15,21 +15,19 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import com.google.code.morphia.Key;
 import com.google.gson.Gson;
 import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
 import org.adoptopenjdk.javacountdown.entity.BrowserInfo;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.VersionInfo;
 import org.adoptopenjdk.javacountdown.entity.Visit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Map;
+import org.mongodb.morphia.Key;
 
 /**
  * The main Data provider for the JAX-RS services.
@@ -38,7 +36,6 @@ import java.util.Map;
 public class DataProvider {
 
     private static final String EMPTY_STRING = "";
-    private static final Logger logger = LoggerFactory.getLogger(DataProvider.class);
 
     @Inject
     @DataAccessObject(Type.VISIT)
@@ -69,9 +66,9 @@ public class DataProvider {
         GeoPosition geoPosition = geoPositionDAO.getGeoPosition(latitude, longitude);
 
         if (geoPosition.getCountry() == null || EMPTY_STRING.equals(geoPosition.getCountry())) {
-            logger.error("No country code found for lat/lng: {},{}.", latitude, longitude);
+            System.out.println("No country code found for lat/lng: " + latitude + " " + longitude);
         } else {
-            logger.debug("Country code {} found for lat/lng: {},{}", geoPosition.getCountry(), latitude, longitude);
+            System.out.println("Country code {} found for lat/lng: " + geoPosition.getCountry() + " " + latitude + " " + longitude);
         }
 
         return geoPosition;
@@ -99,9 +96,9 @@ public class DataProvider {
 
         try {
             Key<Visit> key = visitDAO.save(visit);
-            logger.debug("Visit persisted with key {}", key);
+            //logger.debug("Visit persisted with key {}", key);
         } catch (Exception e) {
-            logger.error("Could not persist Visit {}, message: {}", visit, e.getMessage());
+            //logger.error("Could not persist Visit {}, message: {}", visit, e.getMessage());
             throw e;
         } finally {
             visitEvent.fire(visit);
@@ -119,7 +116,7 @@ public class DataProvider {
         Gson gson = new Gson();
         String json = gson.toJson(jdkAdoptionCountry);
         
-        logger.debug("Retrieved JDK adoption as JSON: {} ", json);
+        //logger.debug("Retrieved JDK adoption as JSON: {} ", json);
         
         return json;
     }
@@ -142,7 +139,7 @@ public class DataProvider {
                 versionInfo.setPatchVersion(Integer.parseInt(tokens[2]));
                 versionInfo.setBuildVersion(Integer.parseInt(tokens[3]));
             } catch (NumberFormatException | NullPointerException e) {
-                logger.warn("Failed to parse version {} ", visitTransfer.getVersion());
+                //logger.warn("Failed to parse version {} ", visitTransfer.getVersion());
             }
         }
         return versionInfo;

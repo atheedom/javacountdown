@@ -18,8 +18,6 @@ package org.adoptopenjdk.javacountdown.boundary;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 import org.adoptopenjdk.javacountdown.control.ResultCache;
 import org.adoptopenjdk.javacountdown.control.VisitTransfer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -35,8 +33,6 @@ import javax.ws.rs.core.Response;
 @Path("version")
 @Stateless
 public class VersionResource {
-
-    private static final Logger logger = LoggerFactory.getLogger(VersionResource.class);
 
     @Inject
     private DataProvider dataProvider;
@@ -60,8 +56,10 @@ public class VersionResource {
         try {
             visitTransfer = gson.fromJson(visit, VisitTransfer.class);
         } catch (JsonSyntaxException e) {
-            logger.warn("Could not deserialize client input, message: {}", e.getMessage());
-            throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
+            // logger.warn("Could not deserialize client input, message: {}", e.getMessage());
+          System.out.println("Could not deserialize client input, message " +  e.getMessage());
+              
+          throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
         }
         dataProvider.persistVisit(visitTransfer);
         return Response.noContent().build();

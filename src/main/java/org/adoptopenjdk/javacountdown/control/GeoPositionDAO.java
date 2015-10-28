@@ -15,19 +15,17 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import com.google.code.morphia.DatastoreImpl;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.dao.BasicDAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.mongodb.morphia.DatastoreImpl;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.dao.BasicDAO;
 
 /**
  * Data Access Object for the GeoPosition collection.
@@ -36,7 +34,6 @@ import java.util.List;
  */
 public class GeoPositionDAO extends BasicDAO<GeoPosition, Key<GeoPosition>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(GeoPosition.class);
 
     public GeoPositionDAO(Class<GeoPosition> entityClass, DatastoreImpl datastore) {
         super(entityClass, datastore);
@@ -77,7 +74,7 @@ public class GeoPositionDAO extends BasicDAO<GeoPosition, Key<GeoPosition>> {
                 geoPosition.setCountry((String) dbObject.get("country"));
                 geoPosition.setCity((String) dbObject.get("city"));
             } else {
-                logger.warn("No data was return by the query [" + query + "]");
+                //logger.warn("No data was return by the query [" + query + "]");
             }
         }
 

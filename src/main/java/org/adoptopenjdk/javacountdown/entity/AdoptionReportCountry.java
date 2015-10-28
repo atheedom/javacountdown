@@ -3,8 +3,8 @@ package org.adoptopenjdk.javacountdown.entity;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
 import org.bson.types.ObjectId;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
 /**
  * This entity represents the data used to generate the world map showing the

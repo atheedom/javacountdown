@@ -15,17 +15,15 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import com.google.code.morphia.DatastoreImpl;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.dao.BasicDAO;
-import com.google.code.morphia.query.Query;
 import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.mongodb.morphia.DatastoreImpl;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.dao.BasicDAO;
+import org.mongodb.morphia.query.Query;
 
 /**
  * Data Access Object for the JdkAdoption collection.
@@ -34,7 +32,7 @@ import java.util.Map;
  */
 public class AdoptionReportDAO extends BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdoptionReportDAO.class);
+    // private static final Logger logger = LoggerFactory.getLogger(AdoptionReportDAO.class);
 
     public AdoptionReportDAO(Class<AdoptionReportCountry> entityClass, DatastoreImpl datastore) {
         super(entityClass, datastore);
@@ -69,7 +67,7 @@ public class AdoptionReportDAO extends BasicDAO<AdoptionReportCountry, Key<Adopt
             }
         }
 
-        logger.debug("Retrieved JDK adoption: {}", countryPercentageAdoption);
+        System.out.println("Retrieved JDK adoption: " + countryPercentageAdoption);
         return countryPercentageAdoption;
     }
 

@@ -16,8 +16,8 @@
 package org.adoptopenjdk.javacountdown.entity;
 
 import java.io.Serializable;
+import org.mongodb.morphia.annotations.Embedded;
 
-import com.google.code.morphia.annotations.Embedded;
 
 /**
  * 

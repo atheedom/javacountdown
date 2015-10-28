@@ -15,20 +15,21 @@
  */
 package org.adoptopenjdk.javacountdown.entity;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.PostLoad;
-import com.google.code.morphia.annotations.PrePersist;
-import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.annotations.Transient;
 
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 
 import javax.enterprise.context.RequestScoped;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.PostLoad;
+import org.mongodb.morphia.annotations.PrePersist;
+import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  * Visit class, represents an end user hitting a website with their Java applet
@@ -54,21 +55,22 @@ public class Visit implements Serializable {
     private String os;
 
     @Transient
-    private DateTime time; // Yoda time
+    private LocalDateTime time; // Yoda time
     private Date date; // Java time. We persist this.
 
     @PrePersist
     public void dateTimeToDate() {
-        setDate(getTime().toDate());
+        setDate(Date.from(getTime().atZone(ZoneId.systemDefault()).toInstant()));
     }
 
     @PostLoad
     public void dateToDateTime() {
-        setTime(new DateTime(getDate()));
+        setTime(getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        //setTime(new LocalDateTime(getDate()));
     }
 
     public Visit() {
-        setTime(new DateTime());
+        setTime(LocalDateTime.now());
     }
 
     public boolean isVersion(int versionToCheckAgainst) {
@@ -91,11 +93,11 @@ public class Visit implements Serializable {
         this.version = version;
     }
 
-    public DateTime getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(DateTime dateTime) {
+    public void setTime(LocalDateTime dateTime) {
         this.time = dateTime;
     }
 

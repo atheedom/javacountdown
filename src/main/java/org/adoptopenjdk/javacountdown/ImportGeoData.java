@@ -6,12 +6,12 @@ import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 /**
  * Used for one-off importing the CSV based GeoData into MongoDB
@@ -44,7 +44,7 @@ public class ImportGeoData {
 
         Path geoData = Paths.get(CSV_FILE_LOCATION);
 
-        try (BufferedReader bufferedReader = Files.newReader(geoData.toFile(), Charsets.UTF_8)) {
+        try (BufferedReader bufferedReader = Files.newBufferedReader(geoData, StandardCharsets.UTF_8)) {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] country = line.split(delimiter);
                 BasicDBObject document = JSONUtility.constructJSONDocument(country);

@@ -15,8 +15,6 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.Singleton;
 import javax.inject.Inject;
@@ -39,7 +37,7 @@ import javax.ejb.TimerService;
 @Singleton
 public class ResultCache {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResultCache.class);
+    //private static final Logger logger = LoggerFactory.getLogger(ResultCache.class);
 
     String json = "";
 
@@ -59,7 +57,7 @@ public class ResultCache {
     @Timeout
     public void timeout(Timer timer) {
         json = dataProvider.getJdkAdoptionReport();
-        logger.debug("Rebuilt JDK adoption cache");
+        //logger.debug("Rebuilt JDK adoption cache");
     }
     
     public String getCountryData() {

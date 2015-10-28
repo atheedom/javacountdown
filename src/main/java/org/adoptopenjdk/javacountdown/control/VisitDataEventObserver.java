@@ -15,17 +15,15 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import com.google.code.morphia.Key;
 import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
 import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
 import org.adoptopenjdk.javacountdown.entity.Visit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.Asynchronous;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.inject.Inject;
+import org.mongodb.morphia.Key;
 
 /**
  * Observes events fired by the VisitDAO
@@ -35,7 +33,7 @@ import javax.inject.Inject;
 @Asynchronous
 public class VisitDataEventObserver {
 
-    private static final Logger logger = LoggerFactory.getLogger(VisitDataEventObserver.class);
+    //private static final Logger logger = LoggerFactory.getLogger(VisitDataEventObserver.class);
 
     @Inject
     @DataAccessObject(Type.REPORT)
@@ -49,7 +47,7 @@ public class VisitDataEventObserver {
      */
     public void onSuccess(@Observes(during = TransactionPhase.AFTER_SUCCESS) Visit visit) {
 
-        logger.debug("Observed Visit event for {}", visit);
+        //logger.debug("Observed Visit event for {}", visit);
 
         AdoptionReportCountry adoptionReportCountry = adoptionReportDAO.getCountryTotals(visit.getCountry());
         if (adoptionReportCountry == null) {
@@ -58,7 +56,7 @@ public class VisitDataEventObserver {
         adoptionReportCountry.updateTotals(visit);
         Key<AdoptionReportCountry> key = adoptionReportDAO.save(adoptionReportCountry);
 
-        logger.debug("Updated adoption, persisted key {}", key);
+        //logger.debug("Updated adoption, persisted key {}", key);
     }
 
     /**
@@ -68,7 +66,7 @@ public class VisitDataEventObserver {
      * @param visit
      */
     public static void onFailure(@Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
-        logger.error("Observed failed visit event for {}", visit);
+        //logger.error("Observed failed visit event for {}", visit);
     }
 
 }
