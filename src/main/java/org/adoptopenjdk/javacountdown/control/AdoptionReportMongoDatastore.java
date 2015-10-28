@@ -16,49 +16,47 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.mongodb.morphia.DatastoreImpl;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.query.Query;
 
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- * Data Access Object for the JdkAdoption collection.
- * 
- * @author Alex Theedom
+ * Datastore for the JDK adoption collection.
+ *
+ * @author AdoptOpenJDK
  */
-public class AdoptionReportDAO extends BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> {
+public class AdoptionReportMongoDatastore extends BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> {
 
-    // private static final Logger logger = LoggerFactory.getLogger(AdoptionReportDAO.class);
-
-    public AdoptionReportDAO(Class<AdoptionReportCountry> entityClass, DatastoreImpl datastore) {
-        super(entityClass, datastore);
+    @Inject
+    public AdoptionReportMongoDatastore(Datastore datastore) {
+        super(datastore);
     }
 
     /**
      * Finds the document for the given country in the JDK adoption collecting
-     * 
+     *
      * @param country
      * @return
      */
     public AdoptionReportCountry getCountryTotals(String country) {
-        Query<AdoptionReportCountry> query = ds.createQuery(AdoptionReportCountry.class).field("country")
-                .equal(country);
+        Query<AdoptionReportCountry> query = createQuery().field("country").equal(country);
         return query.get();
     }
 
     /**
      * Returns the data used to generate the world map of JDK 7 adoption.
-     * 
+     *
      * @return
      */
     public Map<String, Integer> getJdkAdoption() {
         // TODO ensure that this query does not return null for country
-        List<AdoptionReportCountry> adoptionByCountry = ds.createQuery(AdoptionReportCountry.class)
-                .retrievedFields(true, "country", "percentage").asList();
+        List<AdoptionReportCountry> adoptionByCountry = createQuery().retrievedFields(true, "country", "percentage").asList();
 
         Map<String, Integer> countryPercentageAdoption = new HashMap<>();
         for (AdoptionReportCountry country : adoptionByCountry) {

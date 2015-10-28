@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.control;
+package org.adoptopenjdk.javacountdown.entity;
 
 import java.io.Serializable;
 

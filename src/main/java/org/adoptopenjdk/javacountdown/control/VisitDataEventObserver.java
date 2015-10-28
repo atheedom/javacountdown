@@ -15,20 +15,19 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
 import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
 import org.adoptopenjdk.javacountdown.entity.Visit;
+import org.mongodb.morphia.Key;
 
 import javax.ejb.Asynchronous;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.inject.Inject;
-import org.mongodb.morphia.Key;
 
 /**
- * Observes events fired by the VisitDAO
- * 
- * @author Alex Theedom
+ * Observes events fired by the VisitMongoDatastore
+ *
+ * @author AdoptOpenJDK
  */
 @Asynchronous
 public class VisitDataEventObserver {
@@ -36,25 +35,24 @@ public class VisitDataEventObserver {
     //private static final Logger logger = LoggerFactory.getLogger(VisitDataEventObserver.class);
 
     @Inject
-    @DataAccessObject(Type.REPORT)
-    AdoptionReportDAO adoptionReportDAO;
+    AdoptionReportMongoDatastore adoptionReportMongoDatastore;
 
     /**
      * If the Visit object has been persisted successfully we can update the
      * adoption report data.
-     * 
+     *
      * @param visit
      */
     public void onSuccess(@Observes(during = TransactionPhase.AFTER_SUCCESS) Visit visit) {
 
         //logger.debug("Observed Visit event for {}", visit);
 
-        AdoptionReportCountry adoptionReportCountry = adoptionReportDAO.getCountryTotals(visit.getCountry());
+        AdoptionReportCountry adoptionReportCountry = adoptionReportMongoDatastore.getCountryTotals(visit.getCountry());
         if (adoptionReportCountry == null) {
             adoptionReportCountry = new AdoptionReportCountry(visit);
         }
         adoptionReportCountry.updateTotals(visit);
-        Key<AdoptionReportCountry> key = adoptionReportDAO.save(adoptionReportCountry);
+        Key<AdoptionReportCountry> key = adoptionReportMongoDatastore.save(adoptionReportCountry);
 
         //logger.debug("Updated adoption, persisted key {}", key);
     }
@@ -62,7 +60,7 @@ public class VisitDataEventObserver {
     /**
      * If there is a failure in persisting the Visit object we log it and don't
      * update the adoption report data.
-     * 
+     *
      * @param visit
      */
     public static void onFailure(@Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {

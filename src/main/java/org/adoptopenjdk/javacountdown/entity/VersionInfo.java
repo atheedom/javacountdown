@@ -20,11 +20,9 @@ import org.mongodb.morphia.annotations.Embedded;
 
 
 /**
- * 
  * This entity represents the visitor's Java version information
  * 
- * @author Alex Theedom
- * 
+ * @author AdoptOpenJDK
  */
 @Embedded
 public class VersionInfo implements Serializable {

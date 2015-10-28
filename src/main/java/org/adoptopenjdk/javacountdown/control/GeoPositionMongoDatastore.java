@@ -20,23 +20,24 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.bson.types.ObjectId;
-
-import java.util.ArrayList;
-import java.util.List;
-import org.mongodb.morphia.DatastoreImpl;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.dao.BasicDAO;
 
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Data Access Object for the GeoPosition collection.
- * 
- * @author Alex Theedom
+ * Datastore for the GeoPosition collection.
+ *
+ * @author AdoptOpenJDK
  */
-public class GeoPositionDAO extends BasicDAO<GeoPosition, Key<GeoPosition>> {
+public class GeoPositionMongoDatastore extends BasicDAO<GeoPosition, Key<GeoPosition>> {
 
-
-    public GeoPositionDAO(Class<GeoPosition> entityClass, DatastoreImpl datastore) {
-        super(entityClass, datastore);
+    @Inject
+    public GeoPositionMongoDatastore(Datastore datastore) {
+        super(datastore);
     }
 
     /**
@@ -44,11 +45,9 @@ public class GeoPositionDAO extends BasicDAO<GeoPosition, Key<GeoPosition>> {
      * latitude/longitude. It will return a GeoPosition object containing the
      * ISO 3166 alpha-2 code. Refer to http://www.maxmind.com/en/worldcities for
      * the data behind it.
-     * 
-     * @param latitude
-     *            The latitude
-     * @param longitude
-     *            The longitude
+     *
+     * @param latitude  The latitude
+     * @param longitude The longitude
      * @return A GeoPosition entity
      */
     public GeoPosition getGeoPosition(double latitude, double longitude) {

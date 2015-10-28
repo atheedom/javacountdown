@@ -16,43 +16,30 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import com.mongodb.MongoClient;
-
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import java.net.UnknownHostException;
-import org.mongodb.morphia.DatastoreImpl;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-/**
- * Produces Morphia datastore objects used by the DAO to persist data in
- * MongoDB.
- * 
- * @author Alex Theedom
- */
-@Startup
-@Singleton
-@ApplicationScoped
-public class MorphiaDatastore {
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
-    //private static final Logger logger = LoggerFactory.getLogger(MorphiaDatastore.class);
+/**
+ * Produces Morphia datastore objects used by the Datastores to persist data in MongoDB.
+ *
+ * @author AdoptOpenJDK
+ */
+public class MorphiaDatastoreProducer {
 
     private static final String DATABASE_NAME = "jcountdown";
     private static final String HOST = "localhost";
     private static final int PORT = 27017;
 
     @Produces
-    public static DatastoreImpl getDatastore() {
-
-        MongoClient mongoClient = null;
-        DatastoreImpl datastore = null;
-
-        mongoClient = new MongoClient(HOST, PORT);
+    @ApplicationScoped
+    public Datastore exportDatastore() {
+        MongoClient mongoClient = new MongoClient(HOST, PORT);
         Morphia morphia = new Morphia();
-        datastore = (DatastoreImpl) morphia.createDatastore(mongoClient, DATABASE_NAME);
 
-        return datastore;
+        return morphia.createDatastore(mongoClient, DATABASE_NAME);
     }
 
 }

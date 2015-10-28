@@ -22,9 +22,9 @@ import org.mongodb.morphia.annotations.Embedded;
 /**
  * 
  * This entity represents the visitor's browser information
- * 
- * @author Alex Theedom
- * 
+ *
+ * @author AdoptOpenJDK
+ *
  */
 @Embedded
 public class BrowserInfo implements Serializable {

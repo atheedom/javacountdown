@@ -24,8 +24,8 @@ import org.mongodb.morphia.annotations.Id;
 
 /**
  * This entity represents the geoposition of the visitor.
- * 
- * @author Alex Theedom
+ *
+ * @author AdoptOpenJDK
  */
 @RequestScoped
 @Entity(value = "geopositions", noClassnameStored = true)

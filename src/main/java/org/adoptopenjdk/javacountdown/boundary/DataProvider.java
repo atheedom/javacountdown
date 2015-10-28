@@ -13,24 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.control;
+package org.adoptopenjdk.javacountdown.boundary;
 
-import com.google.gson.Gson;
-import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
+import org.adoptopenjdk.javacountdown.control.AdoptionReportMongoDatastore;
+import org.adoptopenjdk.javacountdown.control.GeoPositionMongoDatastore;
+import org.adoptopenjdk.javacountdown.control.VisitMongoDatastore;
+import org.adoptopenjdk.javacountdown.entity.VisitTransfer;
 import org.adoptopenjdk.javacountdown.entity.BrowserInfo;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.VersionInfo;
 import org.adoptopenjdk.javacountdown.entity.Visit;
 
-import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Map;
-import org.mongodb.morphia.Key;
 
 /**
  * The main Data provider for the JAX-RS services.
+ *
+ * @author AdoptOpenJDK
  */
 @Stateless
 public class DataProvider {
@@ -38,49 +40,22 @@ public class DataProvider {
     private static final String EMPTY_STRING = "";
 
     @Inject
-    @DataAccessObject(Type.VISIT)
-    VisitDAO visitDAO;
+    VisitMongoDatastore visitMongoDatastore;
 
     @Inject
-    @DataAccessObject(Type.GEOPOSITION)
-    GeoPositionDAO geoPositionDAO;
+    GeoPositionMongoDatastore geoPositionMongoDatastore;
 
     @Inject
-    @DataAccessObject(Type.REPORT)
-    AdoptionReportDAO adoptionReportDAO;
+    AdoptionReportMongoDatastore adoptionReportMongoDatastore;
 
     @Inject
     Event<Visit> visitEvent;
 
     /**
-     * This retrieves the country code based on the given latitude/longitude. It
-     * should return a ISO 3166 alpha-2 code. Refer to
-     * http://www.maxmind.com/en/worldcities for the data behind it.
-     *
-     * @param latitude  The latitude
-     * @param longitude The longitude
-     * @return GeoPosition
-     */
-    private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
-
-        GeoPosition geoPosition = geoPositionDAO.getGeoPosition(latitude, longitude);
-
-        if (geoPosition.getCountry() == null || EMPTY_STRING.equals(geoPosition.getCountry())) {
-            System.out.println("No country code found for lat/lng: " + latitude + " " + longitude);
-        } else {
-            System.out.println("Country code {} found for lat/lng: " + geoPosition.getCountry() + " " + latitude + " " + longitude);
-        }
-
-        return geoPosition;
-    }
-
-    /**
-     * Persists a Visit entity. This only gets called when the visit could be
-     * parsed by GSON. No further checks necessary here.
+     * Persists a Visit entity.
      *
      * @param visitTransfer The visit to persist
      */
-    @Asynchronous
     public void persistVisit(VisitTransfer visitTransfer) {
 
         GeoPosition geoPosition = getGeoPositionFromLatLong(visitTransfer.getLatitude(), visitTransfer.getLongitude());
@@ -94,16 +69,8 @@ public class DataProvider {
         visit.setBrowserInfo(new BrowserInfo(visitTransfer.getBrowserName(), visitTransfer.getBrowserVersion()));
         visit.setOs(visitTransfer.getOs());
 
-        try {
-            Key<Visit> key = visitDAO.save(visit);
-            //logger.debug("Visit persisted with key {}", key);
-        } catch (Exception e) {
-            //logger.error("Could not persist Visit {}, message: {}", visit, e.getMessage());
-            throw e;
-        } finally {
-            visitEvent.fire(visit);
-        }
-
+        visitMongoDatastore.save(visit);
+        visitEvent.fire(visit);
     }
 
     /**
@@ -111,14 +78,30 @@ public class DataProvider {
      *
      * @return List of countries and percentage adoption
      */
-    public String getJdkAdoptionReport() {
-        Map<String, Integer> jdkAdoptionCountry = adoptionReportDAO.getJdkAdoption();
-        Gson gson = new Gson();
-        String json = gson.toJson(jdkAdoptionCountry);
-        
-        //logger.debug("Retrieved JDK adoption as JSON: {} ", json);
-        
-        return json;
+    public Map<String, Integer> getJdkAdoptionReport() {
+        return adoptionReportMongoDatastore.getJdkAdoption();
+    }
+
+    /**
+     * This retrieves the country code based on the given latitude/longitude. It
+     * should return a ISO 3166 alpha-2 code. Refer to
+     * http://www.maxmind.com/en/worldcities for the data behind it.
+     *
+     * @param latitude  The latitude
+     * @param longitude The longitude
+     * @return GeoPosition
+     */
+    private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
+
+        GeoPosition geoPosition = geoPositionMongoDatastore.getGeoPosition(latitude, longitude);
+
+        if (geoPosition.getCountry() == null || EMPTY_STRING.equals(geoPosition.getCountry())) {
+            System.out.println("No country code found for lat/lng: " + latitude + " " + longitude);
+        } else {
+            System.out.println("Country code {} found for lat/lng: " + geoPosition.getCountry() + " " + latitude + " " + longitude);
+        }
+
+        return geoPosition;
     }
 
     /**
