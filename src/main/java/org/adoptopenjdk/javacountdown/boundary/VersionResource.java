@@ -15,20 +15,17 @@
  */
 package org.adoptopenjdk.javacountdown.boundary;
 
-import org.adoptopenjdk.javacountdown.control.DataProvider;
-import org.adoptopenjdk.javacountdown.control.ResultCache;
-import org.adoptopenjdk.javacountdown.control.VisitTransfer;
+import org.adoptopenjdk.javacountdown.entity.VisitTransfer;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
+import java.util.Map;
 
 /**
  * REST Web Service for the javacountdown website.
+ *
+ * @author AdoptOpenJDK
  */
 @Path("version")
 @Stateless
@@ -37,42 +34,25 @@ public class VersionResource {
     @Inject
     private DataProvider dataProvider;
 
-    @EJB
-    ResultCache cache;
-
     /**
      * Retrieves visitor information from web client in JSON format.
-     * 
-     * @param visit
-     *            The client visit information
-     * @return A HTTP 202 Accepted response
+     *
+     * @param visit The client visit information
      */
     @POST
     @Consumes("application/json")
-    public Response sendVisit(String visit) {
-
-        VisitTransfer visitTransfer = null;
-        Gson gson = new Gson();
-        try {
-            visitTransfer = gson.fromJson(visit, VisitTransfer.class);
-        } catch (JsonSyntaxException e) {
-            // logger.warn("Could not deserialize client input, message: {}", e.getMessage());
-          System.out.println("Could not deserialize client input, message " +  e.getMessage());
-              
-          throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
-        }
-        dataProvider.persistVisit(visitTransfer);
-        return Response.noContent().build();
+    public void sendVisit(VisitTransfer visit) {
+        dataProvider.persistVisit(visit);
     }
 
     /**
      * Returns the JDK adoption data.
-     * 
+     *
      * @return A map containing the JDK adoption for the countries
      */
     @GET
     @Produces("application/json")
-    public Response getJdkAdoption() {
-        return Response.ok(cache.getCountryData()).build();
+    public Map<String, Integer> getJdkAdoption() {
+        return dataProvider.getJdkAdoptionReport();
     }
 }

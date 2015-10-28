@@ -34,8 +34,8 @@ import org.mongodb.morphia.annotations.Transient;
 /**
  * Visit class, represents an end user hitting a website with their Java applet
  * enabled event.
- * 
- * @author Alex Theedom
+ *
+ * @author AdoptOpenJDK
  */
 @RequestScoped
 @Entity(value = "visitors", noClassnameStored = true)

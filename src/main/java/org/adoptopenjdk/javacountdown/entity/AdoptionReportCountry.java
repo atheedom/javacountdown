@@ -9,9 +9,8 @@ import org.mongodb.morphia.annotations.Id;
 /**
  * This entity represents the data used to generate the world map showing the
  * global adoption of Java 7.
- * 
- * @author Alex Theedom
- * 
+ *
+ * @author AdoptOpenJDK
  */
 @RequestScoped
 @Entity(value = "jdkadoption", noClassnameStored = true)
