@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.control;
+package org.adoptopenjdk.jcountdown.control;
 
-import org.adoptopenjdk.javacountdown.entity.CountryAdoption;
-import org.adoptopenjdk.javacountdown.entity.Visit;
+import org.adoptopenjdk.jcountdown.entity.CountryAdoption;
+import org.adoptopenjdk.jcountdown.entity.Visit;
 
 import javax.ejb.Asynchronous;
 import javax.enterprise.event.Observes;

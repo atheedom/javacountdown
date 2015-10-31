@@ -1,4 +1,4 @@
-package org.adoptopenjdk.javacountdown.entity;
+package org.adoptopenjdk.jcountdown.entity;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;

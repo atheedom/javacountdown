@@ -1,9 +1,9 @@
-package org.adoptopenjdk.javacountdown.control;
+package org.adoptopenjdk.jcountdown.control;
 
 import com.mongodb.MongoClient;
-import org.adoptopenjdk.javacountdown.entity.CountryAdoption;
-import org.adoptopenjdk.javacountdown.entity.GeoPosition;
-import org.adoptopenjdk.javacountdown.entity.Visit;
+import org.adoptopenjdk.jcountdown.entity.CountryAdoption;
+import org.adoptopenjdk.jcountdown.entity.GeoPosition;
+import org.adoptopenjdk.jcountdown.entity.Visit;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
