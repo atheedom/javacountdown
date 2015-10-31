@@ -15,18 +15,13 @@
  */
 package org.adoptopenjdk.javacountdown.entity;
 
-import java.io.Serializable;
-
 /**
- * This class is a used to transfer data received via REST from the visitor to
- * the DAO. We use this DTO to avoid the need to format data in the correct JSON
- * format on the client side.
- * 
- * @author Alex Theedom
+ * Transfer object received by the REST endpoint.
+ *
+ * @author AdoptOpenJDK
  */
-public class VisitTransfer implements Serializable {
+public class VisitTransfer {
 
-    private static final long serialVersionUID = 5128072717995441603L;
     private String version;
     private double latitude;
     private double longitude;

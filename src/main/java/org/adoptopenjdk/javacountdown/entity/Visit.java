@@ -17,19 +17,11 @@ package org.adoptopenjdk.javacountdown.entity;
 
 
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.*;
 
-import javax.enterprise.context.RequestScoped;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.PostLoad;
-import org.mongodb.morphia.annotations.PrePersist;
-import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.annotations.Transient;
 
 /**
  * Visit class, represents an end user hitting a website with their Java applet
@@ -37,11 +29,8 @@ import org.mongodb.morphia.annotations.Transient;
  *
  * @author AdoptOpenJDK
  */
-@RequestScoped
 @Entity(value = "visitors", noClassnameStored = true)
-public class Visit implements Serializable {
-
-    private static final long serialVersionUID = -5580843065068184730L;
+public class Visit {
 
     @Id
     private ObjectId id;
@@ -55,50 +44,47 @@ public class Visit implements Serializable {
     private String os;
 
     @Transient
-    private LocalDateTime time; // Yoda time
-    private Date date; // Java time. We persist this.
-
-    @PrePersist
-    public void dateTimeToDate() {
-        setDate(Date.from(getTime().atZone(ZoneId.systemDefault()).toInstant()));
-    }
-
-    @PostLoad
-    public void dateToDateTime() {
-        setTime(getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-        //setTime(new LocalDateTime(getDate()));
-    }
+    private LocalDateTime time;
+    private Date date;
 
     public Visit() {
         setTime(LocalDateTime.now());
     }
 
-    public boolean isVersion(int versionToCheckAgainst) {
-        return this.version == versionToCheckAgainst;
+    @PrePersist
+    private void dateTimeToDate() {
+        System.out.println("dateTimeToDate called");
+        setDate(Date.from(getTime().atZone(ZoneId.systemDefault()).toInstant()));
     }
 
-    public GeoPosition getGeoPosition() {
-        return geoPosition;
+    @PostLoad
+    private void dateToDateTime() {
+        System.out.println("dateToDateTime called");
+        setTime(getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
     }
 
-    public void setGeoPosition(GeoPosition geoPosition) {
-        this.geoPosition = geoPosition;
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public int getVersion() {
-        return this.version;
+        return version;
     }
 
     public void setVersion(int version) {
         this.version = version;
     }
 
-    public LocalDateTime getTime() {
-        return time;
+    public VersionInfo getVersionInfo() {
+        return versionInfo;
     }
 
-    public void setTime(LocalDateTime dateTime) {
-        this.time = dateTime;
+    public void setVersionInfo(VersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
     }
 
     public String getCountry() {
@@ -109,12 +95,12 @@ public class Visit implements Serializable {
         this.country = country;
     }
 
-    public VersionInfo getVersionInfo() {
-        return versionInfo;
+    public GeoPosition getGeoPosition() {
+        return geoPosition;
     }
 
-    public void setVersionInfo(VersionInfo versionInfo) {
-        this.versionInfo = versionInfo;
+    public void setGeoPosition(GeoPosition geoPosition) {
+        this.geoPosition = geoPosition;
     }
 
     public BrowserInfo getBrowserInfo() {
@@ -131,6 +117,22 @@ public class Visit implements Serializable {
 
     public void setOs(String os) {
         this.os = os;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override
@@ -156,14 +158,6 @@ public class Visit implements Serializable {
     public String toString() {
         return "Visit [id=" + id + ", version=" + version + ", versionInfo=" + versionInfo + ", country=" + country
                 + ", geoPosition=" + geoPosition + ", browser=" + browserInfo + ", os=" + os + ", time=" + time + "]";
-    }
-
-    public Date getDate() {
-        return (Date)date.clone();
-    }
-
-    public void setDate(Date date) {
-        this.date = (Date)date.clone();
     }
 
 }

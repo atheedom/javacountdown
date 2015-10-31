@@ -16,30 +16,22 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import com.mongodb.MongoClient;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
 /**
- * Produces Morphia datastore objects used by the Datastores to persist data in MongoDB.
+ * Produces a Mongo client objects used by the Datastores to persist data in MongoDB.
  *
  * @author AdoptOpenJDK
  */
-public class MorphiaDatastoreProducer {
-
-    private static final String DATABASE_NAME = "jcountdown";
-    private static final String HOST = "localhost";
-    private static final int PORT = 27017;
+public class MongoClientProducer {
 
     @Produces
     @ApplicationScoped
-    public Datastore exportDatastore() {
-        MongoClient mongoClient = new MongoClient(HOST, PORT);
-        Morphia morphia = new Morphia();
-
-        return morphia.createDatastore(mongoClient, DATABASE_NAME);
+    public MongoClient produceClient() {
+        // default host is localhost, default port is 27017
+        return new MongoClient();
     }
 
 }

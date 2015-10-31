@@ -15,14 +15,8 @@
  */
 package org.adoptopenjdk.javacountdown.boundary;
 
-import org.adoptopenjdk.javacountdown.control.AdoptionReportMongoDatastore;
-import org.adoptopenjdk.javacountdown.control.GeoPositionMongoDatastore;
-import org.adoptopenjdk.javacountdown.control.VisitMongoDatastore;
-import org.adoptopenjdk.javacountdown.entity.VisitTransfer;
-import org.adoptopenjdk.javacountdown.entity.BrowserInfo;
-import org.adoptopenjdk.javacountdown.entity.GeoPosition;
-import org.adoptopenjdk.javacountdown.entity.VersionInfo;
-import org.adoptopenjdk.javacountdown.entity.Visit;
+import org.adoptopenjdk.javacountdown.control.MongoDatastore;
+import org.adoptopenjdk.javacountdown.entity.*;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -37,16 +31,8 @@ import java.util.Map;
 @Stateless
 public class DataProvider {
 
-    private static final String EMPTY_STRING = "";
-
     @Inject
-    VisitMongoDatastore visitMongoDatastore;
-
-    @Inject
-    GeoPositionMongoDatastore geoPositionMongoDatastore;
-
-    @Inject
-    AdoptionReportMongoDatastore adoptionReportMongoDatastore;
+    MongoDatastore mongoDatastore;
 
     @Inject
     Event<Visit> visitEvent;
@@ -57,19 +43,10 @@ public class DataProvider {
      * @param visitTransfer The visit to persist
      */
     public void persistVisit(VisitTransfer visitTransfer) {
+        Visit visit = createVisit(visitTransfer);
+        correlateGeoPosition(visit, visitTransfer.getLatitude(), visitTransfer.getLongitude());
 
-        GeoPosition geoPosition = getGeoPositionFromLatLong(visitTransfer.getLatitude(), visitTransfer.getLongitude());
-        VersionInfo versionInfo = constructVersionInfo(visitTransfer);
-
-        Visit visit = new Visit();
-        visit.setVersion(versionInfo.getMinorVersion());
-        visit.setVersionInfo(versionInfo);
-        visit.setCountry(geoPosition.getCountry());
-        visit.setGeoPosition(geoPosition);
-        visit.setBrowserInfo(new BrowserInfo(visitTransfer.getBrowserName(), visitTransfer.getBrowserVersion()));
-        visit.setOs(visitTransfer.getOs());
-
-        visitMongoDatastore.save(visit);
+        mongoDatastore.save(visit);
         visitEvent.fire(visit);
     }
 
@@ -79,37 +56,20 @@ public class DataProvider {
      * @return List of countries and percentage adoption
      */
     public Map<String, Integer> getJdkAdoptionReport() {
-        return adoptionReportMongoDatastore.getJdkAdoption();
+        return mongoDatastore.getJdkAdoption();
     }
 
-    /**
-     * This retrieves the country code based on the given latitude/longitude. It
-     * should return a ISO 3166 alpha-2 code. Refer to
-     * http://www.maxmind.com/en/worldcities for the data behind it.
-     *
-     * @param latitude  The latitude
-     * @param longitude The longitude
-     * @return GeoPosition
-     */
-    private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
+    private Visit createVisit(VisitTransfer transfer) {
+        VersionInfo versionInfo = constructVersionInfo(transfer);
 
-        GeoPosition geoPosition = geoPositionMongoDatastore.getGeoPosition(latitude, longitude);
-
-        if (geoPosition.getCountry() == null || EMPTY_STRING.equals(geoPosition.getCountry())) {
-            System.out.println("No country code found for lat/lng: " + latitude + " " + longitude);
-        } else {
-            System.out.println("Country code {} found for lat/lng: " + geoPosition.getCountry() + " " + latitude + " " + longitude);
-        }
-
-        return geoPosition;
+        Visit visit = new Visit();
+        visit.setVersion(versionInfo.getMinorVersion());
+        visit.setVersionInfo(versionInfo);
+        visit.setBrowserInfo(new BrowserInfo(transfer.getBrowserName(), transfer.getBrowserVersion()));
+        visit.setOs(transfer.getOs());
+        return visit;
     }
 
-    /**
-     * Parsing the version string to it's numbers.
-     *
-     * @param visitTransfer The visit
-     * @return VersionInfo
-     */
     private static VersionInfo constructVersionInfo(VisitTransfer visitTransfer) {
         VersionInfo versionInfo = new VersionInfo();
         if (visitTransfer.getVersion() != null) {
@@ -122,10 +82,16 @@ public class DataProvider {
                 versionInfo.setPatchVersion(Integer.parseInt(tokens[2]));
                 versionInfo.setBuildVersion(Integer.parseInt(tokens[3]));
             } catch (NumberFormatException | NullPointerException e) {
-                //logger.warn("Failed to parse version {} ", visitTransfer.getVersion());
+                System.err.println("Failed to parse version " + visitTransfer.getVersion());
             }
         }
         return versionInfo;
+    }
+
+    private void correlateGeoPosition(Visit visit, double latitude, double longitude) {
+        GeoPosition geoPosition = mongoDatastore.findGeoPosition(latitude, longitude);
+        visit.setGeoPosition(geoPosition);
+        visit.setCountry(geoPosition.getCountry());
     }
 
 }

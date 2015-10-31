@@ -15,21 +15,16 @@
  */
 package org.adoptopenjdk.javacountdown.entity;
 
-import java.io.Serializable;
 import org.mongodb.morphia.annotations.Embedded;
 
 
 /**
- * 
  * This entity represents the visitor's browser information
  *
  * @author AdoptOpenJDK
- *
  */
 @Embedded
-public class BrowserInfo implements Serializable {
-
-    private static final long serialVersionUID = 6008518106648845721L;
+public class BrowserInfo {
 
     private String version;
     private String name;

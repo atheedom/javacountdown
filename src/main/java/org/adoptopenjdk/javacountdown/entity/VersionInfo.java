@@ -15,19 +15,16 @@
  */
 package org.adoptopenjdk.javacountdown.entity;
 
-import java.io.Serializable;
 import org.mongodb.morphia.annotations.Embedded;
 
 
 /**
  * This entity represents the visitor's Java version information
- * 
+ *
  * @author AdoptOpenJDK
  */
 @Embedded
-public class VersionInfo implements Serializable {
-
-    private static final long serialVersionUID = -1203925642378324622L;
+public class VersionInfo {
 
     private int majorVersion;
     private int minorVersion;
