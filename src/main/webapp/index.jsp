@@ -28,28 +28,12 @@
       <script src="js/vendor/jquery.vmap.world.js"></script>
       <script src="js/vendor/plugindetect_java.js"></script>
       <script src="js/vendor/jquery.cookie.js"></script>
+      <script src="js/cookie/jquery.cookiesdirective.js"></script>
+      <script src="js/cookie/jcountdown.cookiepolicy.js"></script>
       <!-- TODO decide between detect.js and platform.js for browser detection -->
       <script src="js/detect_os_browser/detect.js"></script>
       <script src="js/platform/platform.js"></script>
-      <script src="js/cookie/jquery.cookiesdirective.js"></script>
       <script src="js/main.js"></script>
-      <script type="text/javascript">
-        $(document).ready(function () {
-          $.cookiesDirective({
-            privacyPolicyUri: 'privacy-policy.jsp',
-            explicitConsent: false, // false allows implied consent
-            position: 'bottom', // top or bottom of viewport
-            duration: 10, // display time in seconds
-            limit: 0, // limit disclosure appearances, 0 is forever    
-            message: "The jcountdown.com website uses cookies. By continuing to browse the site, you are agreeing to our use of cookies.", // customise the disclosure message             
-            fontFamily: 'helvetica', // font style for disclosure panel
-            fontColor: '#FFFFFF', // font color for disclosure panel
-            fontSize: '12px', // font size for disclosure panel
-            backgroundColor: '#004066', // background color of disclosure panel
-            backgroundOpacity: '80', // opacity of disclosure panel
-            linkColor: '#FFFFFF' // link color in disclosure panel
-          });
-        });
       </script>
     </head>
     <body>
@@ -71,13 +55,16 @@
       </div>
 
       <div class="main-container">
-        <div class="main wrapper clearfix">
 
-          <div id="map">
-            <h2><fmt:message key="map.headline"/></h2>
-            <!-- Map must be a minimum of 500px in height else you get strange errors -->
-            <div id="vmap" style="width: 100%; height: 500px;"></div>
-          </div>
+        <!-- TODO figure out how to fullwidth the map -->
+        <div id="map">
+          <h2><fmt:message key="map.headline"/></h2>
+          <!-- vmap height must be at least the same size as the height set for .jqvmap-ajax_response
+               (in the jqvmap.css) else you get an empty section -->
+          <div id="vmap" style="width: 100%; height: 500px;"></div>
+        </div>
+
+        <div class="main wrapper clearfix">
 
           <article>
             <header>
