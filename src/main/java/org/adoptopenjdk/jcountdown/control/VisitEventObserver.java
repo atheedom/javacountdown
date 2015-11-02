@@ -13,11 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.control;
+package org.adoptopenjdk.jcountdown.control;
 
-import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
-import org.adoptopenjdk.javacountdown.entity.Visit;
-import org.mongodb.morphia.Key;
+import org.adoptopenjdk.jcountdown.entity.CountryAdoption;
+import org.adoptopenjdk.jcountdown.entity.Visit;
 
 import javax.ejb.Asynchronous;
 import javax.enterprise.event.Observes;
@@ -30,12 +29,10 @@ import javax.inject.Inject;
  * @author AdoptOpenJDK
  */
 @Asynchronous
-public class VisitDataEventObserver {
-
-    //private static final Logger logger = LoggerFactory.getLogger(VisitDataEventObserver.class);
+public class VisitEventObserver {
 
     @Inject
-    AdoptionReportMongoDatastore adoptionReportMongoDatastore;
+    MongoDatastore mongoDatastore;
 
     /**
      * If the Visit object has been persisted successfully we can update the
@@ -44,27 +41,22 @@ public class VisitDataEventObserver {
      * @param visit
      */
     public void onSuccess(@Observes(during = TransactionPhase.AFTER_SUCCESS) Visit visit) {
-
-        //logger.debug("Observed Visit event for {}", visit);
-
-        AdoptionReportCountry adoptionReportCountry = adoptionReportMongoDatastore.getCountryTotals(visit.getCountry());
-        if (adoptionReportCountry == null) {
-            adoptionReportCountry = new AdoptionReportCountry(visit);
+        CountryAdoption countryAdoption = mongoDatastore.findCountryAdoption(visit.getCountry());
+        if (countryAdoption == null) {
+            countryAdoption = new CountryAdoption();
+            countryAdoption.setCountry(visit.getCountry());
         }
-        adoptionReportCountry.updateTotals(visit);
-        Key<AdoptionReportCountry> key = adoptionReportMongoDatastore.save(adoptionReportCountry);
 
-        //logger.debug("Updated adoption, persisted key {}", key);
+        countryAdoption.updateTotals(visit);
+        mongoDatastore.save(countryAdoption);
     }
 
     /**
      * If there is a failure in persisting the Visit object we log it and don't
      * update the adoption report data.
-     *
-     * @param visit
      */
     public static void onFailure(@Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
-        //logger.error("Observed failed visit event for {}", visit);
+        System.err.println("Observed failed visit event for " + visit);
     }
 
 }
