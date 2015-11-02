@@ -1,9 +1,11 @@
 /* 
     Document   : javaadoption
     Created on : 19.02.2013, 12:13:47
-    Author     : eiselem
+    Author     : AdoptOpenJDK
     Description:
         Purpose of the stylesheet follows.
+
+        Custom styling for the JCountdown site
 */
 
 a {
@@ -14,9 +16,13 @@ a {
     font-weight: bold;
 }
 
+#map {
+    margin-bottom: 20px;
+}
+
 aside.white {
     background: #FFFFFF;
-    color: #000;
+    color: #000000;
 }
 
 article a {

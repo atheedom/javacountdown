@@ -95,7 +95,7 @@ function initialize() {
     }
 
     // Render the map
-    $('#map_canvas')
+    jQuery('#vmap')
             .vectorMap(
                     {
                         map : 'world_en',

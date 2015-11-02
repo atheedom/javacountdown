@@ -9,8 +9,8 @@
     <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>JCountdown - Tracking Java client versions across the world</title>
-      <meta name="description" content="">
+      <title>JCountdown - Tracking Java client versions across the world to encourage use of the latest safe and secure version.</title>
+      <meta name="description" content="Tracking Java client versions across the world to encourage use of the latest safe and secure version.">
       <meta name="viewport" content="width=device-width">
 
       <link rel="stylesheet" href="css/normalize.css">
@@ -18,14 +18,19 @@
       <link rel="stylesheet" href="css/javaadoption.css">
       <link rel="stylesheet" href="css/vendor/jqvmap.css">
       <script>var url = "${pageContext.request.contextPath}"</script>
+      <!-- TODO replace this modernizer with a custom built one -->
       <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-      <script src="js/vendor/jquery-1.9.1.min.js"></script>
-      <script src="js/vendor/jquery.vmap.packed.js"></script>
+      <!-- Still using 1.x series of jquery as we want to support the older browsers -->
+      <script src="js/vendor/jquery-1.11.3.min.js">
+      <!-- Need to add noConflict() call as jquery map is not always compatible with jquery calling mechanisms -->
+      <script>jQuery.noConflict();</script>
+      <script src="js/vendor/jquery.vmap.min.js"></script>
       <script src="js/vendor/jquery.vmap.world.js"></script>
       <script src="js/vendor/plugindetect_java.js"></script>
       <script src="js/vendor/jquery.cookie.js"></script>
+      <!-- TODO decide between detect.js and platform.js for browser detection -->
       <script src="js/detect_os_browser/detect.js"></script>
-      <script src="js/platformdetct/platform.js"></script>
+      <script src="js/platform/platform.js"></script>
       <script src="js/cookie/jquery.cookiesdirective.js"></script>
       <script src="js/main.js"></script>
       <script type="text/javascript">
@@ -56,15 +61,23 @@
         <header class="wrapper clearfix">
           <a href="index.jsp"><img src="img/jcountdown.png" width="250" height="70" alt="jCountdown" /></a>
           <nav>
+            <ul>
               <li><a href="http://java.com" target="_blank"><fmt:message key="javacom"/></a></li>
               <li><a href="http://otn.oracle.com" target="_blank"><fmt:message key="oraclecom"/></a></li>
               <li><a href="http://java.net" target="_blank"><fmt:message key="javanet"/></a></li>
+            </ul>
           </nav>
         </header>
       </div>
 
       <div class="main-container">
         <div class="main wrapper clearfix">
+
+          <div id="map">
+            <h2><fmt:message key="map.headline"/></h2>
+            <!-- Map must be a minimum of 500px in height else you get strange errors -->
+            <div id="vmap" style="width: 100%; height: 500px;"></div>
+          </div>
 
           <article>
             <header>
@@ -75,10 +88,6 @@
             <section>
               <h2><fmt:message key="security.headline"/></h2>
               <p><fmt:message key="security.text"/></p>
-            </section>
-            <section>
-              <h2><fmt:message key="map.headline"/></h2>
-              <div id="map_canvas" style="width: 100%; height: 400px;"></div>
             </section>
             <section>
               <h2><fmt:message key="notready.headline"/></h2>
