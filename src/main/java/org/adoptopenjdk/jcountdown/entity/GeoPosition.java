@@ -13,32 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.entity;
+package org.adoptopenjdk.jcountdown.entity;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
 import org.bson.types.ObjectId;
-
-import javax.enterprise.context.RequestScoped;
-import java.io.Serializable;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.geo.Point;
 
 /**
  * This entity represents the geoposition of the visitor.
- * 
- * @author Alex Theedom
+ *
+ * @author AdoptOpenJDK
  */
-@RequestScoped
 @Entity(value = "geopositions", noClassnameStored = true)
-public class GeoPosition implements Serializable {
+public class GeoPosition {
 
-    private static final long serialVersionUID = 6087451582708213924L;
     @Id
     private ObjectId id;
     private String country;
     private String city;
-
-    public GeoPosition() {
-    }
+    private Point location;
 
     public ObjectId getId() {
         return id;
@@ -62,6 +56,14 @@ public class GeoPosition implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     @Override

@@ -13,34 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.entity;
+package org.adoptopenjdk.jcountdown.entity;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.PostLoad;
-import com.google.code.morphia.annotations.PrePersist;
-import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.annotations.Transient;
 
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
+import org.mongodb.morphia.annotations.*;
 
-import javax.enterprise.context.RequestScoped;
-
-import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
  * Visit class, represents an end user hitting a website with their Java applet
  * enabled event.
- * 
- * @author Alex Theedom
+ *
+ * @author AdoptOpenJDK
  */
-@RequestScoped
 @Entity(value = "visitors", noClassnameStored = true)
-public class Visit implements Serializable {
-
-    private static final long serialVersionUID = -5580843065068184730L;
+public class Visit {
 
     @Id
     private ObjectId id;
@@ -54,49 +44,47 @@ public class Visit implements Serializable {
     private String os;
 
     @Transient
-    private DateTime time; // Yoda time
-    private Date date; // Java time. We persist this.
+    private LocalDateTime time;
+    private Date date;
+
+    public Visit() {
+        setTime(LocalDateTime.now());
+    }
 
     @PrePersist
-    public void dateTimeToDate() {
-        setDate(getTime().toDate());
+    private void dateTimeToDate() {
+        System.out.println("dateTimeToDate called");
+        setDate(Date.from(getTime().atZone(ZoneId.systemDefault()).toInstant()));
     }
 
     @PostLoad
-    public void dateToDateTime() {
-        setTime(new DateTime(getDate()));
+    private void dateToDateTime() {
+        System.out.println("dateToDateTime called");
+        setTime(getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
     }
 
-    public Visit() {
-        setTime(new DateTime());
+    public ObjectId getId() {
+        return id;
     }
 
-    public boolean isVersion(int versionToCheckAgainst) {
-        return this.version == versionToCheckAgainst;
-    }
-
-    public GeoPosition getGeoPosition() {
-        return geoPosition;
-    }
-
-    public void setGeoPosition(GeoPosition geoPosition) {
-        this.geoPosition = geoPosition;
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public int getVersion() {
-        return this.version;
+        return version;
     }
 
     public void setVersion(int version) {
         this.version = version;
     }
 
-    public DateTime getTime() {
-        return time;
+    public VersionInfo getVersionInfo() {
+        return versionInfo;
     }
 
-    public void setTime(DateTime dateTime) {
-        this.time = dateTime;
+    public void setVersionInfo(VersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
     }
 
     public String getCountry() {
@@ -107,12 +95,12 @@ public class Visit implements Serializable {
         this.country = country;
     }
 
-    public VersionInfo getVersionInfo() {
-        return versionInfo;
+    public GeoPosition getGeoPosition() {
+        return geoPosition;
     }
 
-    public void setVersionInfo(VersionInfo versionInfo) {
-        this.versionInfo = versionInfo;
+    public void setGeoPosition(GeoPosition geoPosition) {
+        this.geoPosition = geoPosition;
     }
 
     public BrowserInfo getBrowserInfo() {
@@ -129,6 +117,22 @@ public class Visit implements Serializable {
 
     public void setOs(String os) {
         this.os = os;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override
@@ -154,14 +158,6 @@ public class Visit implements Serializable {
     public String toString() {
         return "Visit [id=" + id + ", version=" + version + ", versionInfo=" + versionInfo + ", country=" + country
                 + ", geoPosition=" + geoPosition + ", browser=" + browserInfo + ", os=" + os + ", time=" + time + "]";
-    }
-
-    public Date getDate() {
-        return (Date)date.clone();
-    }
-
-    public void setDate(Date date) {
-        this.date = (Date)date.clone();
     }
 
 }

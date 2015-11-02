@@ -13,23 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.entity;
+package org.adoptopenjdk.jcountdown.entity;
 
-import java.io.Serializable;
+import org.mongodb.morphia.annotations.Embedded;
 
-import com.google.code.morphia.annotations.Embedded;
 
 /**
- * 
  * This entity represents the visitor's browser information
- * 
- * @author Alex Theedom
- * 
+ *
+ * @author AdoptOpenJDK
  */
 @Embedded
-public class BrowserInfo implements Serializable {
-
-    private static final long serialVersionUID = 6008518106648845721L;
+public class BrowserInfo {
 
     private String version;
     private String name;
