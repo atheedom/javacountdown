@@ -1,7 +1,5 @@
-package org.adoptopenjdk.javacountdown.entity;
+package org.adoptopenjdk.jcountdown.entity;
 
-import java.io.Serializable;
-import javax.enterprise.context.RequestScoped;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -9,15 +7,11 @@ import org.mongodb.morphia.annotations.Id;
 /**
  * This entity represents the data used to generate the world map showing the
  * global adoption of Java 7.
- * 
- * @author Alex Theedom
- * 
+ *
+ * @author AdoptOpenJDK
  */
-@RequestScoped
 @Entity(value = "jdkadoption", noClassnameStored = true)
-public class AdoptionReportCountry implements Serializable {
-
-    private static final long serialVersionUID = 5988042409552325372L;
+public class CountryAdoption {
 
     private static final int VERSION_SEVEN = 7;
     private static final int VERSION_EIGHT = 8;
@@ -29,37 +23,21 @@ public class AdoptionReportCountry implements Serializable {
     private int total;
     private int percentage;
 
-    public AdoptionReportCountry() {
-    }
-
-    /**
-     * Constructor that creates a new JdkAdoptionCountry from a Visit object.
-     * 
-     * @param visit
-     */
-    public AdoptionReportCountry(Visit visit) {
-        this.setCountry(visit.getCountry());
-    }
-
     /**
      * Updates the totals for this country and calculates the percentage.
-     * 
+     * <p>
      * TODO I think we want a map of versions to totals?
-     * 
+     *
      * @param visit
      */
     public void updateTotals(Visit visit) {
+        setTotal(getTotal() + 1);
 
-        int visitTotal = getTotal();
-        this.setTotal(++visitTotal);
-
-        int versionTotal = this.getVersion();
-
-        if (visit.isVersion(VERSION_SEVEN) || visit.isVersion(VERSION_EIGHT)) {
-            this.setVersion(++versionTotal);
+        if (visit.getVersion() == VERSION_SEVEN || visit.getVersion() == VERSION_EIGHT) {
+            setVersion(getVersion() + 1);
         }
 
-        this.setPercentage(Math.round(((float) versionTotal / visitTotal) * 100));
+        this.setPercentage(Math.round(((float) getVersion() / getTotal()) * 100));
     }
 
     public ObjectId getId() {
@@ -121,7 +99,7 @@ public class AdoptionReportCountry implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AdoptionReportCountry other = (AdoptionReportCountry) obj;
+        CountryAdoption other = (CountryAdoption) obj;
         if (country == null) {
             if (other.country != null)
                 return false;

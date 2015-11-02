@@ -13,23 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.entity;
+package org.adoptopenjdk.jcountdown.entity;
 
-import java.io.Serializable;
 import org.mongodb.morphia.annotations.Embedded;
 
 
 /**
- * 
  * This entity represents the visitor's Java version information
- * 
- * @author Alex Theedom
- * 
+ *
+ * @author AdoptOpenJDK
  */
 @Embedded
-public class VersionInfo implements Serializable {
-
-    private static final long serialVersionUID = -1203925642378324622L;
+public class VersionInfo {
 
     private int majorVersion;
     private int minorVersion;
