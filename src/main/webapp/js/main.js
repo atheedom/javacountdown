@@ -8,9 +8,12 @@ $(function() {
 });
 
 /*
- * 1. Test for our cookie 1.b If it's there and the java version did not change ..
- * we print out a message. 2. If no cookie exists, then get the geolocation and
- * set that in the cookie 2.a Else inform the user we couldn't help
+ * 1. Test for our cookie
+ * 1.b If it's there and the java version did not change ..
+ * we print out a message.
+ * 2. If no cookie exists, then get the geolocation and
+ * set that in the cookie
+ * 2.a Else inform the user we couldn't help
  */
 function initialize() {
 

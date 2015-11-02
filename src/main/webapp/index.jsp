@@ -9,7 +9,7 @@
     <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title></title>
+      <title>JCountdown - Tracking Java client versions across the world</title>
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width">
 
@@ -25,6 +25,7 @@
       <script src="js/vendor/plugindetect_java.js"></script>
       <script src="js/vendor/jquery.cookie.js"></script>
       <script src="js/detect_os_browser/detect.js"></script>
+      <script src="js/platformdetct/platform.js"></script>
       <script src="js/cookie/jquery.cookiesdirective.js"></script>
       <script src="js/main.js"></script>
       <script type="text/javascript">
@@ -55,11 +56,9 @@
         <header class="wrapper clearfix">
           <a href="index.jsp"><img src="img/jcountdown.png" width="250" height="70" alt="jCountdown" /></a>
           <nav>
-            <ul>
               <li><a href="http://java.com" target="_blank"><fmt:message key="javacom"/></a></li>
               <li><a href="http://otn.oracle.com" target="_blank"><fmt:message key="oraclecom"/></a></li>
               <li><a href="http://java.net" target="_blank"><fmt:message key="javanet"/></a></li>
-            </ul>
           </nav>
         </header>
       </div>
