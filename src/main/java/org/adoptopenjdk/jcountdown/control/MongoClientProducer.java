@@ -15,10 +15,16 @@
  */
 package org.adoptopenjdk.jcountdown.control;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 
 /**
  * Produces a Mongo client objects used by the Datastores to persist data in MongoDB.
@@ -26,12 +32,28 @@ import javax.enterprise.inject.Produces;
  * @author AdoptOpenJDK
  */
 public class MongoClientProducer {
+    
+    @Inject
+    MongoConfiguration mongoConfiguration;
 
     @Produces
     @ApplicationScoped
     public MongoClient produceClient() {
-        // default host is localhost, default port is 27017
-        return new MongoClient();
+        // default host is localhost, default port is 27017       
+       
+        ServerAddress serverAddress = new ServerAddress(mongoConfiguration.getHost(), mongoConfiguration.getPort());
+             
+        MongoCredential mongoCredential = MongoCredential
+                                                .createCredential(
+                                                        mongoConfiguration.getUsername(),
+                                                        mongoConfiguration.getDatabaseName(),
+                                                        mongoConfiguration.getPassword()
+                                                        );
+       
+        List<MongoCredential> credentials = new ArrayList<>();
+        credentials.add(mongoCredential);
+        return new MongoClient(serverAddress, credentials);
     }
 
+ 
 }
