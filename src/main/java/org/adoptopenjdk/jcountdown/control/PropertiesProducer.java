@@ -9,7 +9,7 @@ import javax.enterprise.inject.Produces;
 
 public class PropertiesProducer {
     
-    private static final String PROPERTIES_FILE = "properties/dev/mongo.properties";
+    private static final String PROPERTIES_FILE = "properties/dev/mongo.properties"; // Change depending on environment
     
     private Properties properties = new Properties();
     
@@ -24,11 +24,11 @@ public class PropertiesProducer {
     public MongoConfiguration produceMongoConfiguration(){
             
         // Set the default property values
-//        properties.put(DATABASE_NAME, "jcountdown");
-//        properties.put(PORT, 27017);
-//        properties.put(HOST, "localhost");
-//        properties.put(USERNAME, "");
-//        properties.put(PASSWORD, "");
+        properties.put(DATABASE_NAME, "jcountdown");
+        properties.put(PORT, 27017);
+        properties.put(HOST, "localhost");
+        properties.put(USERNAME, ""); // TODO: set username. See Wiki for more info on how to set users in mongo db
+        properties.put(PASSWORD, ""); // TODO: set password. See wiki for more info on how to set users in mongo db
         
         // Now try and read in any property overrides
         final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_FILE);
