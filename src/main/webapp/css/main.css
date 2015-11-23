@@ -7,7 +7,7 @@ button,
 input,
 select,
 textarea {
-    color: #222;
+    color: #222222;
 }
 
 body {
@@ -55,7 +55,6 @@ textarea {
     padding: 0.2em 0;
 }
 
-
 /* ===== Initializr Styles ==================================================
    Author: Jonathan Verrecchia - verekia.com/initializr/responsive-template
    ========================================================================== */
@@ -74,7 +73,7 @@ body {
    =================== */
 
 .header-container {
-    border-bottom: 20px solid #00acde;
+    border-bottom: 20px solid #00ACDE;
 }
 
 .footer-contrainer {
@@ -83,7 +82,7 @@ body {
 
 .footer-container,
 .main aside {
-    border-top: 20px solid #00acde;
+    border-top: 20px solid #00ACDE;
 }
 
 .header-container,
@@ -157,24 +156,6 @@ nav a:hover {
 .ie7 .title {
     padding-top: 20px;
 }
-
-/* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* ==========================================================================
    Media Queries
@@ -355,10 +336,7 @@ nav a:hover {
         content: " (" attr(title) ")";
     }
 
-    /*
-     * Don't show links for images, or javascript/internal links
-     */
-
+    /* Do not show links for images, or javascript/internal links */
     .ir a:after,
     a[href^="javascript:"]:after,
     a[href^="#"]:after {

@@ -9,8 +9,8 @@
     <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title></title>
-      <meta name="description" content="">
+      <title>JCountdown - Tracking Java client versions across the world to encourage use of the latest safe and secure version.</title>
+      <meta name="description" content="Tracking Java client versions across the world to encourage use of the latest safe and secure version.">
       <meta name="viewport" content="width=device-width">
 
       <link rel="stylesheet" href="css/normalize.css">
@@ -18,32 +18,22 @@
       <link rel="stylesheet" href="css/javaadoption.css">
       <link rel="stylesheet" href="css/vendor/jqvmap.css">
       <script>var url = "${pageContext.request.contextPath}"</script>
+      <!-- TODO replace this modernizer with a custom built one -->
       <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-      <script src="js/vendor/jquery-1.9.1.min.js"></script>
-      <script src="js/vendor/jquery.vmap.packed.js"></script>
+      <!-- Still using 1.x series of jquery as we want to support the older browsers -->
+      <script src="js/vendor/jquery-1.11.3.min.js">
+      <!-- Need to add noConflict() call as jquery map is not always compatible with jquery calling mechanisms -->
+      <script>jQuery.noConflict();</script>
+      <script src="js/vendor/jquery.vmap.min.js"></script>
       <script src="js/vendor/jquery.vmap.world.js"></script>
       <script src="js/vendor/plugindetect_java.js"></script>
       <script src="js/vendor/jquery.cookie.js"></script>
-      <script src="js/detect_os_browser/detect.js"></script>
       <script src="js/cookie/jquery.cookiesdirective.js"></script>
+      <script src="js/cookie/jcountdown.cookiepolicy.js"></script>
+      <!-- TODO decide between detect.js and platform.js for browser detection -->
+      <script src="js/detect_os_browser/detect.js"></script>
+      <script src="js/platform/platform.js"></script>
       <script src="js/main.js"></script>
-      <script type="text/javascript">
-        $(document).ready(function () {
-          $.cookiesDirective({
-            privacyPolicyUri: 'privacy-policy.jsp',
-            explicitConsent: false, // false allows implied consent
-            position: 'bottom', // top or bottom of viewport
-            duration: 10, // display time in seconds
-            limit: 0, // limit disclosure appearances, 0 is forever    
-            message: "The jcountdown.com website uses cookies. By continuing to browse the site, you are agreeing to our use of cookies.", // customise the disclosure message             
-            fontFamily: 'helvetica', // font style for disclosure panel
-            fontColor: '#FFFFFF', // font color for disclosure panel
-            fontSize: '12px', // font size for disclosure panel
-            backgroundColor: '#004066', // background color of disclosure panel
-            backgroundOpacity: '80', // opacity of disclosure panel
-            linkColor: '#FFFFFF' // link color in disclosure panel
-          });
-        });
       </script>
     </head>
     <body>
@@ -65,6 +55,15 @@
       </div>
 
       <div class="main-container">
+
+        <!-- TODO figure out how to fullwidth the map -->
+        <div id="map">
+          <h2><fmt:message key="map.headline"/></h2>
+          <!-- vmap height must be at least the same size as the height set for .jqvmap-ajax_response
+               (in the jqvmap.css) else you get an empty section -->
+          <div id="vmap" style="width: 100%; height: 500px;"></div>
+        </div>
+
         <div class="main wrapper clearfix">
 
           <article>
@@ -76,10 +75,6 @@
             <section>
               <h2><fmt:message key="security.headline"/></h2>
               <p><fmt:message key="security.text"/></p>
-            </section>
-            <section>
-              <h2><fmt:message key="map.headline"/></h2>
-              <div id="map_canvas" style="width: 100%; height: 400px;"></div>
             </section>
             <section>
               <h2><fmt:message key="notready.headline"/></h2>

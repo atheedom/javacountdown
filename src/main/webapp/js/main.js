@@ -8,9 +8,12 @@ $(function() {
 });
 
 /*
- * 1. Test for our cookie 1.b If it's there and the java version did not change ..
- * we print out a message. 2. If no cookie exists, then get the geolocation and
- * set that in the cookie 2.a Else inform the user we couldn't help
+ * 1. Test for our cookie
+ * 1.b If it's there and the java version did not change ..
+ * we print out a message.
+ * 2. If no cookie exists, then get the geolocation and
+ * set that in the cookie
+ * 2.a Else inform the user we couldn't help
  */
 function initialize() {
 
@@ -29,14 +32,19 @@ function initialize() {
                         "We weren't able to detect where you are from.");
             }
         } else {
+            // TODO Enhance this to hook into browser detection so that we can send the
+            // correct message to the user
             $("#geoMessage")
                     .text(
-                            "We weren't able to detect the version of Java you are using. Ensure that you accept the plugin.");
+                            "We weren't able to detect the version of Java you are using. Either you are using a " +
+                            "browser that disables the Java Plugin or you need to make sure that you " +
+                            "accept the plugin install.");
         }
 
     } else if (version === javaCCookie) {
-        $("#geoMessage").html(
-                "You already contributed!<br />You use version " + javaCCookie);
+        // TODO google how to alter the CSS here
+        $("#geoMessage").css("background-color: #CCCCCC;");
+        $("#geoMessage").html("You have already contributed!<br />You use version " + javaCCookie);
     }
 
     // Callback for geolocation - logs java version incl lat long
@@ -52,15 +60,15 @@ function initialize() {
     function showError(error) {
         switch (error.code) {
             case error.PERMISSION_DENIED:
-                $("#geoMessage").text(
-                        "User denied the request for Geolocation.");
+                // TODO lets see if we can edit the CSS on the fly
+                $("#geoMessage").css("");
+                $("#geoMessage").text("User denied the request for Geolocation.");
                 break;
             case error.POSITION_UNAVAILABLE:
                 $("#geoMessage").text("Location information is unavailable.");
                 break;
             case error.TIMEOUT:
-                $("#geoMessage").text(
-                        "The request to get user location timed out.");
+                $("#geoMessage").text("The request to get user location timed out.");
                 break;
             case error.UNKNOWN_ERROR:
                 $("#geoMessage").text("An unknown error occurred.");
@@ -92,7 +100,7 @@ function initialize() {
     }
 
     // Render the map
-    $('#map_canvas')
+    jQuery('#vmap')
             .vectorMap(
                     {
                         map : 'world_en',
